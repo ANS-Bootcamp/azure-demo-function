@@ -1,0 +1,20 @@
+{
+  "bindings": [
+    {
+      "name": "myBlob",
+      "type": "blobTrigger",
+      "dataType": "binary",
+      "direction": "in",
+      "path": "images/{name}",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "table",
+      "name": "imageTableInfo",
+      "tableName": "imageTable",
+      "connection": "AzureWebJobsStorage",
+      "direction": "out"
+    }
+  ],
+  "disabled": false
+}

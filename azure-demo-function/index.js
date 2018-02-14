@@ -123,6 +123,7 @@ module.exports = function (context, myBlob) {
             context.bindings.outputBlob = result.body;
             context.log("Processed Thumbnail");
             context.log(result);
+            context.don(null);
         })
 
         .catch(function(err) {

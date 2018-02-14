@@ -126,7 +126,7 @@ module.exports = function (context, myBlob) {
         .then(function(result){
             context.bindings.outputBlob = result.body;
             context.log("Processed Thumbnail");
-            context.log("result");
+            context.log(result);
         })
 
         .catch(function(err) {

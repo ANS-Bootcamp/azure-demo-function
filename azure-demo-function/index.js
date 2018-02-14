@@ -55,17 +55,7 @@ module.exports = function (context, myBlob) {
                 return data               
             })
 
-            .then(function(data) {
-                computerVisionApiClient.generateThumbnailInStream(72, 72, myBlob, {smartCropping: true})
-                    .then(function(result){
-                        context.bindingData.outputBlob = result;
-                        context.log("Processed Thumbnail")
-                    })
-                    .catch(function(err) {
-                        context.log(`Error Processing Thumbnail: ${err}`);
-                        context.done(null, err);
-                    })
-            })
+
 
             .then(function(data){
                 // create public url for image

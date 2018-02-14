@@ -29,7 +29,6 @@ module.exports = function (context, myBlob) {
     var expiryDate = new Date(startDate);
 
     visionQuery();
-    thumbnails();
 
     function visionQuery(){
       computerVisionApiClient.analyzeImageInStream(myBlob, {visualFeatures: ["Categories", "Tags", "Description", "Color", "Faces", "ImageType"]})
@@ -59,6 +58,10 @@ module.exports = function (context, myBlob) {
                 context.log(`The primary colors of this image are: ${data.color.dominantColors.join(', ')}.`); 
 
                 return data               
+            })
+
+            .then(function(){
+                thumbnails();
             })
 
             .then(function(data){
@@ -124,7 +127,6 @@ module.exports = function (context, myBlob) {
             context.bindings.outputBlob = result.body;
             context.log("Processed Thumbnail");
             context.log("result");
-            context.done(null);
         })
 
         .catch(function(err) {

@@ -120,7 +120,7 @@ module.exports = function (context, myBlob) {
 
     function thumbnails(){
         computerVisionApiClient.generateThumbnailInStream(72, 72, myBlob, {smartCropping: true})
-        .then(function(result){
+        .then(function(response){
             context.bindings.outputBlob = response;
             context.log("Processed Thumbnail");
             //context.log(result);

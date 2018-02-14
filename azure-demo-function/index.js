@@ -62,71 +62,73 @@ module.exports = function (context, myBlob) {
                         context.log("Processed Thumbnail");
                         //context.log(result);
                     })
+
+
+                    .then(function(data){
+                        // create public url for image
+                        var blobService = azure.createBlobService();
+                        // Create a SAS token that expires in 24 hours
+                        // Set start time to five minutes ago to avoid clock skew.
+                        var startDate = new Date();
+                        startDate.setMinutes(startDate.getMinutes() - 5);
+                        var expiryDate = new Date(startDate);
+                        expiryDate.setMinutes(startDate.getMinutes() + 1440); //24 Hours from now
+
+                        var permissions = permissions || azure.BlobUtilities.SharedAccessPermissions.READ;
+
+                        var sharedAccessPolicy = {
+                            AccessPolicy: {
+                                Permissions: permissions,
+                                Start: startDate,
+                                Expiry: expiryDate
+                            }
+                        };
+
+                        var blobPath = context.bindingData.blobTrigger.split("/");
+                        context.log("Container: " + blobPath[0]);
+                        context.log("Image: " + blobPath[1]);
+                        var sasToken = blobService.generateSharedAccessSignature(blobPath[0], blobPath[1], sharedAccessPolicy);
+                        uri = blobService.getUrl(blobPath[0], blobPath[1], sasToken, true);
+
+                        return data
+                    })
+
+                    .then(function(data){    
+                        // write to azure table
+                        context.bindings.imageTableInfo = [];
+                        var rowkey = Date.now().toString();
+                        context.log(rowkey)
+                            context.bindings.imageTableInfo.push({
+                                PartitionKey: "images",
+                                RowKey: rowkey,
+                                data: {
+                                    "secureuri" : uri,
+                                    "description": {
+                                        "value": data.description.captions[0].text,
+                                        "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
+                                    },
+                                    "tags": {
+                                        "value": data.tags
+                                    },
+                                    "colours": {
+                                        "value": data.color.dominantColors.join(', ')
+                                    }
+                                }
+                            })
+                        // Finished
+                        context.done(null, data);
+                    })
+                    
                     .catch(function(err) {
-                        context.log(`Error Processing Thumbnail: ${err}`);
+                        context.log(`Error: ${err}`);
                         context.done(null, err);
                     })
-                return data
             })
-
-            .then(function(data){
-                // create public url for image
-                var blobService = azure.createBlobService();
-                // Create a SAS token that expires in 24 hours
-                // Set start time to five minutes ago to avoid clock skew.
-                var startDate = new Date();
-                startDate.setMinutes(startDate.getMinutes() - 5);
-                var expiryDate = new Date(startDate);
-                expiryDate.setMinutes(startDate.getMinutes() + 1440); //24 Hours from now
-
-                var permissions = permissions || azure.BlobUtilities.SharedAccessPermissions.READ;
-
-                var sharedAccessPolicy = {
-                    AccessPolicy: {
-                        Permissions: permissions,
-                        Start: startDate,
-                        Expiry: expiryDate
-                    }
-                };
-
-                var blobPath = context.bindingData.blobTrigger.split("/");
-                context.log("Container: " + blobPath[0]);
-                context.log("Image: " + blobPath[1]);
-                var sasToken = blobService.generateSharedAccessSignature(blobPath[0], blobPath[1], sharedAccessPolicy);
-                uri = blobService.getUrl(blobPath[0], blobPath[1], sasToken, true);
-
-                return data
-            })
-
-            .then(function(data){    
-                // write to azure table
-                context.bindings.imageTableInfo = [];
-                var rowkey = Date.now().toString();
-                context.log(rowkey)
-                    context.bindings.imageTableInfo.push({
-                        PartitionKey: "images",
-                        RowKey: rowkey,
-                        data: {
-                            "secureuri" : uri,
-                            "description": {
-                                "value": data.description.captions[0].text,
-                                "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
-                            },
-                            "tags": {
-                                "value": data.tags
-                            },
-                            "colours": {
-                                "value": data.color.dominantColors.join(', ')
-                            }
-                        }
-                    })
-                // Finished
-                context.done(null, data);
-            })  
 
             .catch(function(err) {
                 context.log(`Error: ${err}`);
                 context.done(null, err);
             })
+            
     };
 };

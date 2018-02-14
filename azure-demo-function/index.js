@@ -28,7 +28,8 @@ module.exports = function (context, myBlob) {
     startDate.setMinutes(startDate.getMinutes() - 5);
     var expiryDate = new Date(startDate);
 
-    visionQuery();
+    //visionQuery();
+    thumbnails();
 
     function visionQuery(){
       computerVisionApiClient.analyzeImageInStream(myBlob, {visualFeatures: ["Categories", "Tags", "Description", "Color", "Faces", "ImageType"]})
@@ -59,11 +60,6 @@ module.exports = function (context, myBlob) {
 
                 return data               
             })
-
-            .then(function(){
-                thumbnails();
-            })
-
             .then(function(data){
                 // create public url for image
                 var blobService = azure.createBlobService();

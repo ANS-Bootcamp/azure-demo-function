@@ -135,7 +135,8 @@ module.exports = function (context, myBlob) {
             else {
 
               context.log("Status Code: " + response.statusCode);
-
+              context.log("Content-Length: " + response.content-length);
+              context.log(body);
               // Call the callback and pass in the body
               callback(null, body);
             }; 

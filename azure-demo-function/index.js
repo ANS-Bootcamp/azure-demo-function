@@ -1,4 +1,3 @@
-// Main handeler
 module.exports = function (context, myBlob) {
 
     var Vision = require('azure-cognitiveservices-vision');
@@ -70,40 +69,47 @@ module.exports = function (context, myBlob) {
                 return data               
             })
             
+            .then(function(data){
+                thumbnail(imageUri, function (error, outputBlob) {
+
+                  if (error) {
+
+                    context.log("No Output Blob");
+                    return data;
+                  }
+                  else {
+
+                    context.log("Output Blob")
+                    context.bindings.outputBlob = outputBlob;
+                    return data;
+                  };  
+                })
+            })
+
             .then(function(data){    
                 // write to azure table
                 context.bindings.imageTableInfo = [];
                 var rowkey = Date.now().toString();
                 context.log(rowkey)
-                context.bindings.imageTableInfo.push({
-                    PartitionKey: "images",
-                    RowKey: rowkey,
-                    data: {
-                        "imageUri" : imageUri,
-                        "thumbUri" : thumbUri,
-                        "description": {
-                            "value": data.description.captions[0].text,
-                            "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
-                        },
-                        "tags": {
-                            "value": data.tags
-                        },
-                        "colours": {
-                            "value": data.color.dominantColors.join(', ')
+                    context.bindings.imageTableInfo.push({
+                        PartitionKey: "images",
+                        RowKey: context.bindingData.name,
+                        data: {
+                            "imageUri" : imageUri,
+                            "thumbUri" : thumbUri,
+                            "description": {
+                                "value": data.description.captions[0].text,
+                                "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
+                            },
+                            "tags": {
+                                "value": data.tags
+                            },
+                            "colours": {
+                                "value": data.color.dominantColors.join(', ')
+                            }
                         }
-                    }
-                })
-                
-                // create thumbnail
-                thumbnail(imageUri, function (error, outputBlob) {
-                    if (error) {
-                        context.log("No Output Blob");
-                    }else {
-                        context.log("Output Blob")
-                        context.bindings.outputBlob = outputBlob;
-                        context.done(null);
-                    };  
-                })
+                    })
+                context.done(null);
             })
 
             .catch(function(err) {
@@ -123,7 +129,8 @@ module.exports = function (context, myBlob) {
             'Ocp-Apim-Subscription-Key': serviceKey,
             'Content-Type': 'application/json' },
         body: { url: imageUri },
-        encoding: null };
+        encoded: null,
+        json: true };
 
         request(options, function (error, response, body) {
 
@@ -135,8 +142,7 @@ module.exports = function (context, myBlob) {
             else {
 
               context.log("Status Code: " + response.statusCode);
-              context.log("Content-Length: " + response.content-length);
-              context.log(body);
+
               // Call the callback and pass in the body
               callback(null, body);
             }; 

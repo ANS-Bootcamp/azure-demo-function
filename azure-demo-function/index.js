@@ -95,8 +95,8 @@ module.exports = function (context, myBlob) {
 
                     if (error) {
                         context.log("No Output Blob");
-                        context.log(`Error: ${error}`);
-                        context.done(null, erroe);
+                        context.log("Error: "+ error);
+                        context.done(null, error);
                     }
                     else {
                         context.log("Output Blob")
@@ -123,7 +123,7 @@ module.exports = function (context, myBlob) {
             'Ocp-Apim-Subscription-Key': serviceKey,
             'Content-Type': 'application/json' },
         body: { url: imageUri },
-        encoded: null};
+        encoding : null};
 
         request(options, function (error, response, body) {
 

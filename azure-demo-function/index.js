@@ -69,47 +69,41 @@ module.exports = function (context, myBlob) {
                 return data               
             })
             
-            .then(function(data){
-                thumbnail(imageUri, function (error, outputBlob) {
-
-                  if (error) {
-
-                    context.log("No Output Blob");
-                    return data;
-                  }
-                  else {
-
-                    context.log("Output Blob")
-                    context.bindings.outputBlob = outputBlob;
-                    return data;
-                  };  
-                })
-            })
-
             .then(function(data){    
                 // write to azure table
                 context.bindings.imageTableInfo = [];
-                var rowkey = Date.now().toString();
-                context.log(rowkey)
-                    context.bindings.imageTableInfo.push({
-                        PartitionKey: "images",
-                        RowKey: context.bindingData.name,
-                        data: {
-                            "imageUri" : imageUri,
-                            "thumbUri" : thumbUri,
-                            "description": {
-                                "value": data.description.captions[0].text,
-                                "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
-                            },
-                            "tags": {
-                                "value": data.tags
-                            },
-                            "colours": {
-                                "value": data.color.dominantColors.join(', ')
-                            }
+                context.bindings.imageTableInfo.push({
+                    PartitionKey: "images",
+                    RowKey: context.bindingData.name,
+                    data: {
+                        "imageUri" : imageUri,
+                        "thumbUri" : thumbUri,
+                        "description": {
+                            "value": data.description.captions[0].text,
+                            "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
+                        },
+                        "tags": {
+                            "value": data.tags
+                        },
+                        "colours": {
+                            "value": data.color.dominantColors.join(', ')
                         }
-                    })
-                context.done(null);
+                    }
+                })
+
+                thumbnail(imageUri, function (error, outputBlob) {
+
+                    if (error) {
+                        context.log("No Output Blob");
+                        context.log(`Error: ${error}`);
+                        context.done(null, erroe);
+                    }
+                    else {
+                        context.log("Output Blob")
+                        context.bindings.outputBlob = outputBlob;
+                        context.done(null);
+                    };  
+                })
             })
 
             .catch(function(err) {
@@ -129,8 +123,7 @@ module.exports = function (context, myBlob) {
             'Ocp-Apim-Subscription-Key': serviceKey,
             'Content-Type': 'application/json' },
         body: { url: imageUri },
-        encoded: null,
-        json: true };
+        encoded: null};
 
         request(options, function (error, response, body) {
 

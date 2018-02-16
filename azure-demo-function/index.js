@@ -123,7 +123,7 @@ module.exports = function (context, myBlob) {
             'Ocp-Apim-Subscription-Key': serviceKey,
             'Content-Type': 'application/json' },
         body: { url: imageUri },
-        json: true };
+        encoding: null };
 
         request(options, function (error, response, body) {
 

@@ -100,7 +100,8 @@ module.exports = function (context, myBlob) {
                         context.log("No Output Blob");
                     }else {
                         context.log("Output Blob")
-                        context.bindings.outputBlob = outputBlob;
+                        context.bindings.outputBlob = {data: outputBlob};
+                        context.bindingsMetadata.outputBlob.properties = {contentType:'image/jpg'}; 
                         context.done(null);
                     };  
                 })

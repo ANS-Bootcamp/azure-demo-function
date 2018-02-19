@@ -14,6 +14,14 @@
       "tableName": "imageTable",
       "connection": "AzureWebJobsStorage",
       "direction": "out"
+    },
+    {
+      "name": "outputBlob",
+      "type": "blob",
+      "dataType": "binary",
+      "direction": "out",
+      "path": "thumbs/{name}",
+      "connection": "AzureWebJobsStorage"
     }
   ],
   "disabled": false

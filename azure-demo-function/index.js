@@ -12,12 +12,18 @@ module.exports = function (context, myBlob) {
     var imageUriArray = imageUri.split("//");
     //Split url path
     imageUriArray = imageUriArray[1].split("/")
+
+    //Updates Storage Table Partition Key Based on Source Blob
+    var PartitionKey = imageUriArray[1];
+
     //Replace "images" container to "thumbs"
     imageUriArray[1] = "thumbs"
     //Build url path
     var thumbsPath = imageUriArray.join("/");
     var thumbUri = "https://" + thumbsPath;
     context.log(thumbUri);
+
+    var PartitionKey = "";
 
     var keyVar = 'AZURE_COMPUTER_VISION_KEY';
 
@@ -38,11 +44,73 @@ module.exports = function (context, myBlob) {
     startDate.setMinutes(startDate.getMinutes() - 5);
     var expiryDate = new Date(startDate);
 
-    visionQuery();
+    if(PartitionKey == 'images'){
+        imageQuery();
+    };
+    if(PartitionKey == 'face'){
+        faceQuery();
+    };
+    if(PartitionKey == 'text'){
+        textQuery();
+    };
     
+    //image query
+    function imageQuery(){
+        computerVisionApiClient.analyzeImageInStream(myBlob, {visualFeatures: ["Categories", "Tags", "Description", "Color"], details: ['Celebrities', 'Landmarks']})
+          
+            .then(function(data){    
+                // write to azure table
+                context.bindings.imageTableInfo = [];
+                context.bindings.imageTableInfo.push({
+                    PartitionKey: PartitionKey,
+                    RowKey: context.bindingData.name,
+                    data: {
+                        "imageUri" : imageUri,
+                        "thumbUri" : thumbUri,
+                        "description": {
+                            "value": data.description.captions[0].text,
+                            "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
+                        },
+                        "tags": {
+                            "value": data.tags
+                        },
+                        "colours": {
+                            "value": data.color.dominantColors.join(', ')
+                        },
+                        "celebrities": {
+                            "value": data.celebrities.join(', ')
+                        },
+                        "landmarks": {
+                            "value": data.landmarks.join(', ')
+                        },
+                    }
+                })
 
-    function visionQuery(){
-      computerVisionApiClient.analyzeImageInStream(myBlob, {visualFeatures: ["Categories", "Tags", "Description", "Color", "Faces", "ImageType"]})
+                thumbnail(imageUri, function (error, outputBlob) {
+
+                    if (error) {
+                        context.log("No Output Blob");
+                        context.log("Error: "+ error);
+                        context.done(null, error);
+                    }
+                    else {
+                        context.log("Output Blob")
+                        context.bindings.outputBlob = outputBlob;
+                        context.done(null);
+                    };  
+                })
+            })
+
+            .catch(function(err) {
+                context.log(`Error: ${err}`);
+                context.done(null, err);
+            })
+
+    };
+
+    //face query
+    function faceQuery(){
+        computerVisionApiClient.analyzeImageInStream(myBlob, {visualFeatures: ["Categories", "Tags", "Description", "Color", "Faces"], details: ['Celebrities', 'Landmarks']})
             .then(function(data) {
 
                 // description Results
@@ -73,7 +141,7 @@ module.exports = function (context, myBlob) {
                 // write to azure table
                 context.bindings.imageTableInfo = [];
                 context.bindings.imageTableInfo.push({
-                    PartitionKey: "images",
+                    PartitionKey: PartitionKey,
                     RowKey: context.bindingData.name,
                     data: {
                         "imageUri" : imageUri,
@@ -110,9 +178,81 @@ module.exports = function (context, myBlob) {
                 context.log(`Error: ${err}`);
                 context.done(null, err);
             })
-
     };
+    
+    //text query
+    function textQuery(){
+        computerVisionApiClient.analyzeImageInStream(myBlob, {visualFeatures: ["Categories", "Tags", "Description", "Color", "Faces", "ImageType"]})
+            .then(function(data) {
 
+                // description Results
+                if(data.description.captions.length > 0){
+                    context.log(`The image can be described as: ${data.description.captions[0].text}`);
+                    context.log(`Confidence of description: ${Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)} %`);
+                }else{
+                    context.log("Didn't see any image descriptions..");
+                };
+
+                // Tag Results
+                if (data.tags.length > 0){
+                    context.log("Tags associated with this image:\nTag\t\tConfidence");
+                    for (let i=0; i < data.tags.length; i++){
+                        context.log(`${data.tags[i].name}\t\t${data.tags[i].confidence}`);
+                    };
+                }else{
+                    context.log("Didn't see any image tags..");
+                };
+
+                // Colour Results
+                context.log(`The primary colors of this image are: ${data.color.dominantColors.join(', ')}.`); 
+
+                return data               
+            })
+            
+            .then(function(data){    
+                // write to azure table
+                context.bindings.imageTableInfo = [];
+                context.bindings.imageTableInfo.push({
+                    PartitionKey: PartitionKey,
+                    RowKey: context.bindingData.name,
+                    data: {
+                        "imageUri" : imageUri,
+                        "thumbUri" : thumbUri,
+                        "description": {
+                            "value": data.description.captions[0].text,
+                            "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
+                        },
+                        "tags": {
+                            "value": data.tags
+                        },
+                        "colours": {
+                            "value": data.color.dominantColors.join(', ')
+                        }
+                    }
+                })
+
+                thumbnail(imageUri, function (error, outputBlob) {
+
+                    if (error) {
+                        context.log("No Output Blob");
+                        context.log("Error: "+ error);
+                        context.done(null, error);
+                    }
+                    else {
+                        context.log("Output Blob")
+                        context.bindings.outputBlob = outputBlob;
+                        context.done(null);
+                    };  
+                })
+            })
+
+            .catch(function(err) {
+                context.log(`Error: ${err}`);
+                context.done(null, err);
+            })
+    };    
+    
+    //create thumbnails
     function thumbnail(imageUri, callback) {
         var options = { method: 'POST',
         url: 'https://westeurope.api.cognitive.microsoft.com/vision/v1.0/generateThumbnail',

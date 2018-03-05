@@ -51,9 +51,10 @@ module.exports = function (context, myBlob) {
                 // write to azure table
                 context.bindings.imageTableInfo = [];
                 context.bindings.imageTableInfo.push({
-                    PartitionKey: 'images',
+                    PartitionKey: 'image',
                     RowKey: context.bindingData.name,
                     data: {
+                        "api" : "image",
                         "imageUri" : imageUri,
                         "thumbUri" : thumbUri,
                         "description": {

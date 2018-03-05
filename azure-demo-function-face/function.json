@@ -5,7 +5,7 @@
       "type": "blobTrigger",
       "dataType": "binary",
       "direction": "in",
-      "path": "faces/{name}",
+      "path": "face/{name}",
       "connection": "AzureWebJobsStorage"
     },
     {

@@ -5,7 +5,7 @@
       "type": "blobTrigger",
       "dataType": "binary",
       "direction": "in",
-      "path": "images/{name}",
+      "path": "image/{name}",
       "connection": "AzureWebJobsStorage"
     },
     {

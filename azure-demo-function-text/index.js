@@ -45,10 +45,11 @@ module.exports = function (context, myBlob) {
     
     //image query
     function imageQuery(){
-        computerVisionApiClient.analyzeImageInStream(myBlob, {visualFeatures: ["Categories", "Tags", "Description", "Color"], details: ['Celebrities', 'Landmarks']})
+        computerVisionApiClient.analyzeImageInStream(myBlob, {visualFeatures: ["Categories", "Tags", "Description", "Color"], details: "Landmarks"})
           
             .then(function(data){    
                 // write to azure table
+                console.log(JSON.parse(data));
                 context.bindings.imageTableInfo = [];
                 context.bindings.imageTableInfo.push({
                     PartitionKey: 'text',

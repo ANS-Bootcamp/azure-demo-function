@@ -67,9 +67,6 @@ module.exports = function (context, myBlob) {
                         },
                         "colours": {
                             "value": data.color.dominantColors.join(', ')
-                        },
-                        "landmarks": {
-                            "value": data.landmarks.join(', ')
                         }
                     }
                 })

@@ -49,7 +49,7 @@ module.exports = function (context, myBlob) {
           
             .then(function(data){    
                 // write to azure table
-                console.log(JSON.parse(data));
+                console.log("data: " + JSON.parse(data));
                 context.bindings.imageTableInfo = [];
                 context.bindings.imageTableInfo.push({
                     PartitionKey: 'text',
@@ -68,12 +68,9 @@ module.exports = function (context, myBlob) {
                         "colours": {
                             "value": data.color.dominantColors.join(', ')
                         },
-                        "celebrities": {
-                            "value": data.celebrities.join(', ')
-                        },
                         "landmarks": {
                             "value": data.landmarks.join(', ')
-                        },
+                        }
                     }
                 })
 

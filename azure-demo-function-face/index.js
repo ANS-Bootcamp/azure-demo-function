@@ -30,7 +30,7 @@ module.exports = function (context, myBlob) {
     let serviceKey = process.env[keyVar];
 
     let credentials = new CognitiveServicesCredentials(serviceKey);
-    let client = new FaceAPIClient((credentials, "westeurope"));
+    let client = new FaceAPIClient(credentials, "westeurope");
     //let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, "westeurope");
     let cvModels = computerVisionApiClient.models;
 

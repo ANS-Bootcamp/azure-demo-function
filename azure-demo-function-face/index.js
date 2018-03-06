@@ -52,7 +52,7 @@ module.exports = function (context, myBlob) {
                     PartitionKey: 'face',
                     RowKey: context.bindingData.name,
                     data: {
-                        "api" : "face"},
+                        "api" : "face",
                         "imageUri" : imageUri,
                         "thumbUri" : thumbUri
                         //"description": {
@@ -64,7 +64,7 @@ module.exports = function (context, myBlob) {
                         //},
                         //"colours": {
                         //    "value": data.color.dominantColors.join(', ')
-                        //}
+                        }
                     })
                 
 

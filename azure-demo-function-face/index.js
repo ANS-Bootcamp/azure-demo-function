@@ -55,7 +55,7 @@ module.exports = function (context, myBlob) {
                         "api" : "face",
                         "imageUri" : imageUri,
                         "thumbUri" : thumbUri,
-                        "faceAttributes" : data.faceAttributes
+                        "faceAttributes" : data[0].faceAttributes
                         }
                     })
                 

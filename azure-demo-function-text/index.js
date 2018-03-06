@@ -94,17 +94,19 @@ module.exports = function (context, myBlob) {
     function getTextResult(operationLocation, callback){
         computerVisionApiClient.getTextOperationResult(operationLocation, function callback(err, result, request, response){
             if(err){
-                console.log(err);
+                context.log(err);
                 callback(error, null);
             }else{
-                console.log(result.status);
+                context.log(result.status);
                 if(result.status == "Running"){
+                    context.log("Running");
                     getTextResult(operationLocation) 
                 }else{
                     results = "";
                     result.recognitionResult.lines.forEach((line, index) => {
                         results = results + line.text + "\r\n";
                     });
+                    context.log(results);
                     callback(null, results);
                 };
             };

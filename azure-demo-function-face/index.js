@@ -54,16 +54,8 @@ module.exports = function (context, myBlob) {
                     data: {
                         "api" : "face",
                         "imageUri" : imageUri,
-                        "thumbUri" : thumbUri
-                        //"description": {
-                        //    "value": data.description.captions[0].text,
-                        //    "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
-                        //},
-                        //"tags": {
-                        //    "value": data.tags
-                        //},
-                        //"colours": {
-                        //    "value": data.color.dominantColors.join(', ')
+                        "thumbUri" : thumbUri,
+                        "faceAttributes" : data.faceAttributes
                         }
                     })
                 

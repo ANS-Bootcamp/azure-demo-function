@@ -49,6 +49,7 @@ module.exports = function (context, myBlob) {
           
             .then(function(data){    
                 // write to azure table
+                //context.log("data: " + JSON.stringify(data));
                 console.log("data: " + JSON.parse(data));
                 context.bindings.imageTableInfo = [];
                 context.bindings.imageTableInfo.push({

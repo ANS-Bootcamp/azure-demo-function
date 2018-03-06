@@ -45,14 +45,14 @@ module.exports = function (context, myBlob) {
     
     //image query
     function imageQuery(){
-        computerVisionApiClient.recognizeText(myBlob, {detectHandwriting: true}, function callback(err, result, request, response){
-            if(err){
-                context.log(err);
+        computerVisionApiClient.recognizeText(myBlob, {detectHandwriting: true}, function callback(error, result, request, response){
+            if(error){
+                context.log(error);
                 context.done(null, error);
             }else if(response.headers['operation-location']){
                 var operationLocation = response.headers['operation-location'];
                 operationLocation=operationLocation.split("/")[6]
-                console.log(operationLocation);
+                context.log(operationLocation);
                 getTextResult(operationLocation, function (error, results) { 
                     if(error){
                         context.log("No handwriting");
@@ -94,9 +94,9 @@ module.exports = function (context, myBlob) {
 
     //get handwriting results
     function getTextResult(operationLocation, callback){
-        computerVisionApiClient.getTextOperationResult(operationLocation, function callback(err, result, request, response){
-            if(err){
-                context.log(err);
+        computerVisionApiClient.getTextOperationResult(operationLocation, function callback(error, result, request, response){
+            if(error){
+                context.log(error);
                 callback(error, null);
             }else{
                 context.log(result.status);

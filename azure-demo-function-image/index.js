@@ -36,11 +36,6 @@ module.exports = function (context, myBlob) {
 
     context.log("Image name: " + context.bindingData.name);
 
-    // Set start time to five minutes ago to avoid clock skew.
-    var startDate = new Date();
-    startDate.setMinutes(startDate.getMinutes() - 5);
-    var expiryDate = new Date(startDate);
-
     imageQuery();
     
     //image query

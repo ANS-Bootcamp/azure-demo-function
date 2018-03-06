@@ -1,6 +1,5 @@
 module.exports = function (context, myBlob) {
 
-    //var Vision = require('azure-cognitiveservices-vision');
     var FaceAPIClient = require('azure-cognitiveservices-face');
     var CognitiveServicesCredentials = require('ms-rest-azure').CognitiveServicesCredentials;
     var azure = require('azure-storage');
@@ -31,8 +30,6 @@ module.exports = function (context, myBlob) {
 
     let credentials = new CognitiveServicesCredentials(serviceKey);
     let client = new FaceAPIClient(credentials, "westeurope");
-    //let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, "westeurope");
-    let cvModels = computerVisionApiClient.models;
 
     context.log("Image name: " + context.bindingData.name);
 
@@ -45,7 +42,7 @@ module.exports = function (context, myBlob) {
     
     //image query
     function imageQuery(){
-        client.face.analyzeImageInStream(myBlob, {returnFaceAttributes: 'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,exposure,noise'})
+        client.face.detectInStream(myBlob, {returnFaceAttributes: 'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,exposure,noise'})
           
             .then(function(data){    
                 // write to azure table
@@ -55,10 +52,9 @@ module.exports = function (context, myBlob) {
                     PartitionKey: 'face',
                     RowKey: context.bindingData.name,
                     data: {
-                        "api" : "face"}
-                        //,
-                        //"imageUri" : imageUri,
-                        //"thumbUri" : thumbUri,
+                        "api" : "face"},
+                        "imageUri" : imageUri,
+                        "thumbUri" : thumbUri
                         //"description": {
                         //    "value": data.description.captions[0].text,
                         //    "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)

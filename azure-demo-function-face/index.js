@@ -20,15 +20,17 @@ module.exports = function (context, myBlob) {
     var thumbUri = "https://" + thumbsPath;
     context.log(thumbUri);
 
-    var keyVar = 'AZURE_COMPUTER_VISION_FACE_KEY';
+    var keyVar = 'AZURE_COMPUTER_VISION_KEY';
+    var keyVarFace = 'AZURE_COMPUTER_VISION_FACE_KEY';
 
-    if (!process.env[keyVar]) {
-    throw new Error('please set/export the following environment variable: ' + keyVar);
+    if (!process.env[keyVar] || !process.env[keyVarFace]) {
+    throw new Error('please set/export the following environment variables: ' + keyVar + ' ' + keyVarFace);
     }
 
     let serviceKey = process.env[keyVar];
+    let serviceKeyFace = process.env[keyVarFace];
 
-    let credentials = new CognitiveServicesCredentials(serviceKey);
+    let credentials = new CognitiveServicesCredentials(serviceKeyFace);
     let client = new FaceAPIClient(credentials, "westeurope");
 
     context.log("Image name: " + context.bindingData.name);

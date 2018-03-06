@@ -45,32 +45,34 @@ module.exports = function (context, myBlob) {
     
     //image query
     function imageQuery(){
-        computerVisionApiClient.analyzeImageInStream(myBlob, {visualFeatures: ["Categories", "Tags", "Description", "Color"]})
+        computerVisionApiClient.recognizeTextInStream(myBlob, {detectHandwriting: true})
           
-            .then(function(data){    
+            .then(function(data){
+                context.log("data: " + JSON.stringify(data));
+                //computerVisionApiClient.getTextOperationResult(data.headers.Operation-Location)
+                
                 // write to azure table
-                //context.log("data: " + JSON.stringify(data));
-                console.log("data: " + JSON.parse(data));
-                context.bindings.imageTableInfo = [];
-                context.bindings.imageTableInfo.push({
-                    PartitionKey: 'text',
-                    RowKey: context.bindingData.name,
-                    data: {
-                        "api" : "text",
-                        "imageUri" : imageUri,
-                        "thumbUri" : thumbUri,
-                        "description": {
-                            "value": data.description.captions[0].text,
-                            "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
-                        },
-                        "tags": {
-                            "value": data.tags
-                        },
-                        "colours": {
-                            "value": data.color.dominantColors.join(', ')
-                        }
-                    }
-                })
+
+                //context.bindings.imageTableInfo = [];
+                //context.bindings.imageTableInfo.push({
+                //    PartitionKey: 'text',
+                //    RowKey: context.bindingData.name,
+                //    data: {
+                //        "api" : "text",
+                //        "imageUri" : imageUri,
+                //        "thumbUri" : thumbUri,
+                //        "description": {
+                //            "value": data.description.captions[0].text,
+                //            "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
+                //        },
+                //        "tags": {
+                //           "value": data.tags
+                //        },
+                //        "colours": {
+                //            "value": data.color.dominantColors.join(', ')
+                //        }
+                //    }
+                //})
 
                 thumbnail(imageUri, function (error, outputBlob) {
 

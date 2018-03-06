@@ -45,7 +45,7 @@ module.exports = function (context, myBlob) {
     
     //image query
     function imageQuery(){
-        computerVisionApiClient.recognizeText(myBlob, {detectHandwriting: true}, function callback(error, result, request, response){
+        computerVisionApiClient.recognizeTextInStream(myBlob, {detectHandwriting: true}, function callback(error, result, request, response){
             if(error){
                 context.log(error);
                 context.done(null, error);

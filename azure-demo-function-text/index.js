@@ -45,56 +45,71 @@ module.exports = function (context, myBlob) {
     
     //image query
     function imageQuery(){
-        computerVisionApiClient.recognizeTextInStream(myBlob, {detectHandwriting: true})
-          
-            .then(function(data){
-                context.log("data: " + JSON.stringify(data));
-                //computerVisionApiClient.getTextOperationResult(data.headers.Operation-Location)
-                
-                // write to azure table
-
-                //context.bindings.imageTableInfo = [];
-                //context.bindings.imageTableInfo.push({
-                //    PartitionKey: 'text',
-                //    RowKey: context.bindingData.name,
-                //    data: {
-                //        "api" : "text",
-                //        "imageUri" : imageUri,
-                //        "thumbUri" : thumbUri,
-                //        "description": {
-                //            "value": data.description.captions[0].text,
-                //            "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
-                //        },
-                //        "tags": {
-                //           "value": data.tags
-                //        },
-                //        "colours": {
-                //            "value": data.color.dominantColors.join(', ')
-                //        }
-                //    }
-                //})
-
-                thumbnail(imageUri, function (error, outputBlob) {
-
-                    if (error) {
-                        context.log("No Output Blob");
+        computerVisionApiClient.recognizeText(imageUrl, {detectHandwriting: true}, function callback(err, result, request, response){
+            if(err){
+                console.log(err);
+            }else if(response.headers['operation-location']){
+                var operationLocation = response.headers['operation-location'];
+                operationLocation=operationLocation.split("/")[6]
+                console.log(operationLocation);
+                getTextResult(operationLocation, function (error, results) { 
+                    if(error){
+                        context.log("No handwriting");
                         context.log("Error: "+ error);
                         context.done(null, error);
-                    }
-                    else {
-                        context.log("Output Blob")
-                        context.bindings.outputBlob = outputBlob;
-                        context.done(null);
-                    };  
-                })
-            })
+                    }else{
+                        context.log("Handwriting Success")
+                        context.bindings.imageTableInfo = [];
+                        context.bindings.imageTableInfo.push({
+                            PartitionKey: 'image',
+                            RowKey: context.bindingData.name,
+                            data: {
+                                "api" : "image",
+                                "imageUri" : imageUri,
+                                "thumbUri" : thumbUri,
+                                "handwriting": results
+                            }
+                        })
 
-            .catch(function(err) {
-                context.log(`Error: ${err}`);
-                context.done(null, err);
-            })
+                        thumbnail(imageUri, function (error, outputBlob) {
+                            if(error){
+                                context.log("No Output Blob");
+                                context.log("Error: "+ error);
+                                context.done(null, error);
+                            }else{
+                                context.log("Output Blob")
+                                context.bindings.outputBlob = outputBlob;
+                                context.done(null);
+                            };  
+                        });
+                    }; 
+                });
+            }else{
+                console.log("no operation location");
+            };
+        });  
+    };
 
-    };  
+    //get handwriting results
+    function getTextResult(operationLocation, callback){
+        computerVisionApiClient.getTextOperationResult(operationLocation, function callback(err, result, request, response){
+            if(err){
+                console.log(err);
+                callback(error, null);
+            }else{
+                console.log(result.status);
+                if(result.status == "Running"){
+                    getTextResult(operationLocation) 
+                }else{
+                    results = "";
+                    result.recognitionResult.lines.forEach((line, index) => {
+                        results = results + line.text + "\r\n";
+                    });
+                    callback(null, results);
+                };
+            };
+        });
+    };
     
     //create thumbnails
     function thumbnail(imageUri, callback) {
@@ -127,4 +142,5 @@ module.exports = function (context, myBlob) {
             }; 
         });
     };
+
 };

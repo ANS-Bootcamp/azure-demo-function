@@ -42,7 +42,7 @@ module.exports = function (context, myBlob) {
     
     //image query
     function imageQuery(){
-        client.face.detectInStream(myBlob, {returnFaceAttributes: ['age','gender','headPose','smile','facialHair','glasses','emotion','hair','makeup','occlusion','accessories','exposure','noise']})
+        client.face.detectInStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
           
             .then(function(data){    
                 // write to azure table
@@ -56,9 +56,8 @@ module.exports = function (context, myBlob) {
                         "imageUri" : imageUri,
                         "thumbUri" : thumbUri,
                         "faceAttributes" : data[0].faceAttributes
-                        }
-                    })
-                
+                    }
+                })
 
                 thumbnail(imageUri, function (error, outputBlob) {
 

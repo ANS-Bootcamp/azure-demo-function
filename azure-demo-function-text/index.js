@@ -64,7 +64,7 @@ module.exports = function (context, myBlob) {
                             PartitionKey: 'image',
                             RowKey: context.bindingData.name,
                             data: {
-                                "api" : "image",
+                                "api" : "text",
                                 "imageUri" : imageUri,
                                 "thumbUri" : thumbUri,
                                 "handwriting": results

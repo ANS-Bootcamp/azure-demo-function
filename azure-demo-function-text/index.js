@@ -104,6 +104,7 @@ module.exports = function (context, myBlob) {
                     //setTimeout(getTextResult(operationLocation), 1000);
                 }else{
                     results = "";
+                    context.log("Have results");
                     result.recognitionResult.lines.forEach((line, index) => {
                         results = results + line.text + "\r\n";
                     });

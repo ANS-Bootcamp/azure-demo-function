@@ -1,6 +1,7 @@
 module.exports = function (context, myBlob) {
 
-    var Vision = require('azure-cognitiveservices-vision');
+    //var Vision = require('azure-cognitiveservices-vision');
+    var FaceAPIClient = require('azure-cognitiveservices-face');
     var CognitiveServicesCredentials = require('ms-rest-azure').CognitiveServicesCredentials;
     var azure = require('azure-storage');
     var request = require("request");
@@ -20,9 +21,7 @@ module.exports = function (context, myBlob) {
     var thumbUri = "https://" + thumbsPath;
     context.log(thumbUri);
 
-    var PartitionKey = "";
-
-    var keyVar = 'AZURE_COMPUTER_VISION_KEY';
+    var keyVar = 'AZURE_COMPUTER_VISION_FACE_KEY';
 
     if (!process.env[keyVar]) {
     throw new Error('please set/export the following environment variable: ' + keyVar);
@@ -31,7 +30,8 @@ module.exports = function (context, myBlob) {
     let serviceKey = process.env[keyVar];
 
     let credentials = new CognitiveServicesCredentials(serviceKey);
-    let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, "westeurope");
+    let client = new FaceAPIClient((credentials, "westeurope"));
+    //let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, "westeurope");
     let cvModels = computerVisionApiClient.models;
 
     context.log("Image name: " + context.bindingData.name);
@@ -45,7 +45,7 @@ module.exports = function (context, myBlob) {
     
     //image query
     function imageQuery(){
-        computerVisionApiClient.face.analyzeImageInStream(myBlob, {returnFaceAttributes: 'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,exposure,noise'})
+        client.face.analyzeImageInStream(myBlob, {returnFaceAttributes: 'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,exposure,noise'})
           
             .then(function(data){    
                 // write to azure table

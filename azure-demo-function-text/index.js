@@ -47,7 +47,8 @@ module.exports = function (context, myBlob) {
     function imageQuery(){
         computerVisionApiClient.recognizeText(myBlob, {detectHandwriting: true}, function callback(err, result, request, response){
             if(err){
-                console.log(err);
+                context.log(err);
+                context.done(null, error);
             }else if(response.headers['operation-location']){
                 var operationLocation = response.headers['operation-location'];
                 operationLocation=operationLocation.split("/")[6]
@@ -85,7 +86,8 @@ module.exports = function (context, myBlob) {
                     }; 
                 });
             }else{
-                console.log("no operation location");
+                context.log("no operation location");
+                context.done(null, error);
             };
         });  
     };

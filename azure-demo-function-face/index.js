@@ -45,30 +45,31 @@ module.exports = function (context, myBlob) {
     
     //image query
     function imageQuery(){
-        computerVisionApiClient.analyzeImageInStream(myBlob, {visualFeatures: ["Categories", "Tags", "Description", "Color"]})
+        computerVisionApiClient.face.analyzeImageInStream(myBlob, {returnFaceAttributes: 'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,exposure,noise'})
           
             .then(function(data){    
                 // write to azure table
-                //context.log("data: " + JSON.stringify(data));
+                context.log("data: " + JSON.stringify(data));
                 context.bindings.imageTableInfo = [];
                 context.bindings.imageTableInfo.push({
                     PartitionKey: 'face',
                     RowKey: context.bindingData.name,
                     data: {
-                        "api" : "face",
-                        "imageUri" : imageUri,
-                        "thumbUri" : thumbUri,
-                        "description": {
-                            "value": data.description.captions[0].text,
-                            "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
-                        },
-                        "tags": {
-                            "value": data.tags
-                        },
-                        "colours": {
-                            "value": data.color.dominantColors.join(', ')
-                        }
-                    }
+                        "api" : "face"}
+                        //,
+                        //"imageUri" : imageUri,
+                        //"thumbUri" : thumbUri,
+                        //"description": {
+                        //    "value": data.description.captions[0].text,
+                        //    "confidence": Math.round(new Number(data.description.captions[0].confidence) * 100).toFixed(1)
+                        //},
+                        //"tags": {
+                        //    "value": data.tags
+                        //},
+                        //"colours": {
+                        //    "value": data.color.dominantColors.join(', ')
+                        //}
+                    })
                 })
 
                 thumbnail(imageUri, function (error, outputBlob) {

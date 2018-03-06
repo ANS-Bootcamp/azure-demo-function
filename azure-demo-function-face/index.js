@@ -70,7 +70,7 @@ module.exports = function (context, myBlob) {
                         //    "value": data.color.dominantColors.join(', ')
                         //}
                     })
-                })
+                
 
                 thumbnail(imageUri, function (error, outputBlob) {
 

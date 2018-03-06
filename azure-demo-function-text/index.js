@@ -52,8 +52,9 @@ module.exports = function (context, myBlob) {
             }else if(response.headers['operation-location']){
                 var operationLocation = response.headers['operation-location'];
                 operationLocation=operationLocation.split("/")[6]
-                context.log(operationLocation);
-                getTextResult(operationLocation, function (error, results) { 
+                context.log("OperationId: " + operationLocation);
+                getTextResult(operationLocation, function (error, results) {
+                    context.log("getTextReult"); 
                     if(error){
                         context.log("No handwriting");
                         context.log("Error: "+ error);
@@ -94,6 +95,7 @@ module.exports = function (context, myBlob) {
 
     //get handwriting results
     function getTextResult(operationLocation, callback){
+        context.log("Get Handwriting");
         computerVisionApiClient.getTextOperationResult(operationLocation, function callback(error, result, request, response){
             if(error){
                 context.log(error);
@@ -101,7 +103,6 @@ module.exports = function (context, myBlob) {
             }else{
                 context.log(result.status);
                 if(result.status == "Running"){
-                    context.log("Running");
                     getTextResult(operationLocation) 
                 }else{
                     results = "";

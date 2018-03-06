@@ -45,7 +45,7 @@ module.exports = function (context, myBlob) {
     
     //image query
     function imageQuery(){
-        computerVisionApiClient.recognizeText(imageUrl, {detectHandwriting: true}, function callback(err, result, request, response){
+        computerVisionApiClient.recognizeText(myBlob, {detectHandwriting: true}, function callback(err, result, request, response){
             if(err){
                 console.log(err);
             }else if(response.headers['operation-location']){

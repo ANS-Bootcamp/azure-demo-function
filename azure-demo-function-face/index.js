@@ -45,7 +45,7 @@ module.exports = function (context, myBlob) {
     
     //image query
     function imageQuery(){
-        computerVisionApiClient.analyzeImageInStream(myBlob, {visualFeatures: ["Categories", "Tags", "Description", "Color"], details: "Landmarks"})
+        computerVisionApiClient.analyzeImageInStream(myBlob, {visualFeatures: ["Categories", "Tags", "Description", "Color"]})
           
             .then(function(data){    
                 // write to azure table
@@ -66,10 +66,7 @@ module.exports = function (context, myBlob) {
                         },
                         "colours": {
                             "value": data.color.dominantColors.join(', ')
-                        },
-                        "landmarks": {
-                            "value": data.landmarks.join(', ')
-                        },
+                        }
                     }
                 })
 

@@ -54,7 +54,7 @@ module.exports = function (context, myBlob) {
                 operationLocation=operationLocation.split("/")[6]
                 context.log("OperationId: " + operationLocation);
                 getTextResult(operationLocation, function (error, results) {
-                    context.log("getTextReult"); 
+                    context.log("Called getTextResult"); 
                     if(error){
                         context.log("No handwriting");
                         context.log("Error: "+ error);
@@ -95,8 +95,9 @@ module.exports = function (context, myBlob) {
 
     //get handwriting results
     function getTextResult(operationLocation, callback){
-        context.log("Get Handwriting");
+        context.log("In getTextResult");
         computerVisionApiClient.getTextOperationResult(operationLocation, function callback(error, result, request, response){
+            context.log("In getTextResult 2");
             if(error){
                 context.log(error);
                 callback(error, null);

@@ -49,14 +49,24 @@ module.exports = function (context, myBlob) {
                 var operationLocation = response.headers['operation-location'];
                 operationLocation=operationLocation.split("/")[6]
                 context.log("OperationId: " + operationLocation);
+                context.log("Text loaded for analysis!");
+
                 getTextResult(operationLocation, function (error, results) {
-                    context.log("Called getTextResult"); 
+                
                     if(error){
                         context.log("No handwriting");
                         context.log("Error: "+ error);
                         context.done(null, error);
-                    }else{
-                        context.log("Handwriting Success")
+                    }
+                    else {
+                        context.log("Handwriting Analisys Success")
+                        
+                        var handwriting = "";
+                        results.recognitionResult.lines.forEach(function(line) {
+                            handwriting = handwriting + line.text + "\r\n";
+                          });
+                        context.log(handwriting);
+
                         context.bindings.imageTableInfo = [];
                         context.bindings.imageTableInfo.push({
                             PartitionKey: 'image',
@@ -65,7 +75,7 @@ module.exports = function (context, myBlob) {
                                 "api" : "text",
                                 "imageUri" : imageUri,
                                 "thumbUri" : thumbUri,
-                                "handwriting": results
+                                "handwriting": handwriting
                             }
                         })
 
@@ -90,29 +100,48 @@ module.exports = function (context, myBlob) {
     };
 
     //get handwriting results
-    function getTextResult(operationLocation, callback){
-        context.log("In getTextResult");
-        computerVisionApiClient.getTextOperationResult(operationLocation, function callback(error, result, request, response){
-            context.log("In getTextResult 2");
-            if(error){
-                context.log(error);
-                callback(error, null);
-            }else{
-                context.log(result.status);
-                if(result.status == "Running"){
-                    //getTextResult(operationLocation);
-                    setTimeout(getTextResult(operationLocation), 5000);
-                }else{
-                    results = "";
-                    context.log("Have results");
-                    result.recognitionResult.lines.forEach((line, index) => {
-                        results = results + line.text + "\r\n";
-                    });
-                    context.log(results);
-                    callback(null, results);
-                };
-            };
-        });
+    function getTextResult(operationLocation, callback) {
+
+        // Define the function to make the call to Azure
+        var getResult = function() {
+      
+          // Make the call to Azure
+          computerVisionApiClient.getTextOperationResult(operationLocation, function (error, result, request, response) {
+      
+            // Check the error
+            if (error) {
+      
+              // Call the callback and pass in the error
+              callback(error, null);
+            }
+            else {
+      
+              // Check the result status
+              if (result.status == "Running") {
+      
+                // Log that the job is still running
+                context.log("Running...");
+      
+                // Call the function again to get the updated result after 3 seconds wait.
+                setTimeout(function(){ getResult(); }, 3000);
+              }
+              else if (result.status == "Succeeded") {
+      
+                // Call the callback and pass in the result
+
+                callback(null, result);
+              }
+              else {
+      
+                // Call the callback and pass in the error
+                callback("The status has changed to " + result.status, null);
+              }
+            }
+          });
+        }
+      
+        // Call the get result function
+        getResult();
     };
     
     //create thumbnails

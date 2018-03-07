@@ -133,7 +133,7 @@ module.exports = function (context, myBlob) {
                 // Call the function again to get the updated result after 3 seconds wait.
                 setTimeout(function(){ getResult(); }, 3000);
               }
-              else if (result.status == "Succeeded...") {
+              else if (result.status == "Succeeded") {
       
                 // Call the callback and pass in the result
 

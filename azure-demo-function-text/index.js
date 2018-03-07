@@ -69,7 +69,7 @@ module.exports = function (context, myBlob) {
 
                         context.bindings.imageTableInfo = [];
                         context.bindings.imageTableInfo.push({
-                            PartitionKey: 'image',
+                            PartitionKey: 'text',
                             RowKey: context.bindingData.name,
                             data: {
                                 "api" : "text",

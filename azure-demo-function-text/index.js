@@ -100,8 +100,8 @@ module.exports = function (context, myBlob) {
             }else{
                 context.log(result.status);
                 if(result.status == "Running"){
-                    getTextResult(operationLocation);
-                    //setTimeout(getTextResult(operationLocation), 1000);
+                    //getTextResult(operationLocation);
+                    setTimeout(getTextResult(operationLocation), 5000);
                 }else{
                     results = "";
                     context.log("Have results");

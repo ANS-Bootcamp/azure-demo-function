@@ -72,10 +72,6 @@
                         {
                             "name": "WEBSITE_NODE_DEFAULT_VERSION",
                             "value": "6.5.0"
-                        },
-                        {
-                            "name": "WEBSITE_CONTENTSHARE",
-                            "value": "parameters('storageAccountName')"
                         }
                     ]
                 }

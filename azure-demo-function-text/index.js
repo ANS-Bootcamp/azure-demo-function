@@ -17,7 +17,7 @@ module.exports = function (context, myBlob) {
     var blobService = azure.createBlobService();
 
     //Creates container if not exists
-    blobService.createContainerIfNotExists(api, {publicAccessLevel : 'blob'}, function(error) {
+    blobService.createContainerIfNotExists('thumbs', {publicAccessLevel : 'blob'}, function(error) {
         if(error) {
             context.log(error);
         };

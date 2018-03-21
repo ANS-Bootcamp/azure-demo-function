@@ -31,7 +31,7 @@
     "resources": [
         {
             "type": "Microsoft.Web/serverfarms",
-            "apiVersion": "2015-04-01",
+            "apiVersion": "2015-08-01",
             "name": "[variables('hostingPlanName')]",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -41,7 +41,7 @@
             }
         },
         {
-            "apiVersion": "2016-08-01",
+            "apiVersion": "2015-08-01",
             "type": "Microsoft.Web/sites",
             "name": "[variables('functionAppName')]",
             "location": "[resourceGroup().location]",
@@ -124,19 +124,19 @@
     "outputs": {
         "computerVisionKey": {
           "type": "string",
-          "value": "[listKeys(variables('computerVisionid'),'2016-02-01-preview').key1]"
+          "value": "[listKeys(variables('computerVisionid'),'2017-04-18').key1]"
         },
         "computerVisionEndpoint": {
           "type": "string",
-          "value": "[reference(variables('computerVisionid'),'2016-02-01-preview').endpoint]"
+          "value": "[reference(variables('computerVisionid'),'2017-04-18').endpoint]"
         },
         "faceVisionidkey": {
           "type": "string",
-          "value": "[listKeys(variables('faceVisionid'),'2016-02-01-preview').key1]"
+          "value": "[listKeys(variables('faceVisionid'),'2017-04-18').key1]"
         },
         "faceVisionidEndpoint": {
             "type": "string",
-            "value": "[reference(variables('faceVisionid'),'2016-02-01-preview').endpoint]"
+            "value": "[reference(variables('faceVisionid'),'2017-04-18').endpoint]"
         }
       }
 }

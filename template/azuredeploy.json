@@ -31,7 +31,7 @@
     "resources": [
         {
             "type": "Microsoft.Web/serverfarms",
-            "apiVersion": "2015-08-01",
+            "apiVersion": "2016-09-01",
             "name": "[variables('hostingPlanName')]",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -41,7 +41,7 @@
             }
         },
         {
-            "apiVersion": "2015-08-01",
+            "apiVersion": "2016-08-01",
             "type": "Microsoft.Web/sites",
             "name": "[variables('functionAppName')]",
             "location": "[resourceGroup().location]",

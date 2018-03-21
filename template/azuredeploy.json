@@ -80,6 +80,14 @@
                         {
                             "name": "AZURE_STORAGE_ACCESS_KEY",
                             "value": "[listKeys(variables('storageaccountid'),'2016-12-01').keys[0].value]"
+                        },
+                        {
+                            "name": "AZURE_COMPUTER_VISION_KEY",
+                            "value": "[listKeys(variables('computerVisionid'),'2017-04-18').key1]"
+                        },
+                        {
+                            "name": "AZURE_COMPUTER_VISION_FACE_KEY",
+                            "value": "[listKeys(variables('faceVisionid'),'2017-04-18').key1]"
                         }
                     ]
                 }

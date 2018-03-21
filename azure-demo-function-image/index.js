@@ -13,6 +13,15 @@ module.exports = function (context, myBlob) {
     //Split url path
     imageUriArray = imageUriArray[1].split("/")
 
+    //Create Blob Service
+    var blobService = azure.createBlobService();
+
+    //Creates container if not exists
+    blobService.createContainerIfNotExists(api, {publicAccessLevel : 'blob'}, function(error) {
+    if(error) {
+        context.log(error);
+    }
+
     //Replace "images" container to "thumbs"
     imageUriArray[1] = "thumbs"
     //Build url path

@@ -18,9 +18,10 @@ module.exports = function (context, myBlob) {
 
     //Creates container if not exists
     blobService.createContainerIfNotExists(api, {publicAccessLevel : 'blob'}, function(error) {
-    if(error) {
-        context.log(error);
-    }
+        if(error) {
+            context.log(error);
+        };
+    });
 
     //Replace "images" container to "thumbs"
     imageUriArray[1] = "thumbs"

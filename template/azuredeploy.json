@@ -72,14 +72,6 @@
                         {
                             "name": "WEBSITE_NODE_DEFAULT_VERSION",
                             "value": "6.5.0"
-                        },
-                        {
-                            "name: ": "AZURE_STORAGE_ACCOUNT",
-                            "value": "parameters('storageAccountName')"
-                        },
-                        {
-                            "name": "AZURE_STORAGE_ACCESS_KEY",
-                            "value": "listKeys(variables('storageaccountid'),'2016-12-01').keys[0].value"
                         }
                     ]
                 }
@@ -96,6 +88,18 @@
                       "RepoUrl": "[variables('repoUrl')]",
                       "branch": "[variables('branch')]",
                       "IsManualIntegration": true
+                    }
+                },
+                {
+                    "apiVersion": "2015-08-01",
+                    "name": "appsettings",
+                    "type": "config",
+                    "dependsOn": [
+                      "[resourceId('Microsoft.Web/Sites', variables('functionAppName'))]"
+                    ],
+                    "properties": {
+                      "AZURE_STORAGE_ACCOUNT": "[parameters('storageAccountName')]",
+                      "AZURE_STORAGE_ACCESS_KEY": "[listKeys(variables('storageaccountid'),'2016-12-01').keys[0].value]"
                     }
                   }
             ]         

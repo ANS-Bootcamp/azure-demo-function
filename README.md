@@ -1,9 +1,4 @@
 # azure-demo-function
-Node.js function for Azure training
-
-[![Deploy to Azure](/Images/azure_deploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FANS-Bootcamp%2Fazure-demo-function%2Fmaster%2Ftemplate%2Fazuredeploy.json)
-[![Deploy to Azure](/Images/azure_view.png)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FANS-Bootcamp%2Fazure-demo-function%2Fmaster%2Ftemplate%2Fazuredeploy.json)
-
-This template creates a function app and deploys the functions from GitHub. 
+Node.JS code for the function app deployed in the ANS Azure Bootcamp Day2
 
 ![Diagram](/Images/Serverless-Middleware.jpg)

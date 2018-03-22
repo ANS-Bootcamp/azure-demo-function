@@ -1,4 +1,8 @@
-# azure-demo-function
-Node.JS code for the function app deployed in the ANS Azure Bootcamp Day2
+![ANS](Images/ans_logo_small.png)
+# Azure Bootcamp
+For more information on the ANS Azure Bootcamp  visit https://www.ans.co.uk
 
-![Diagram](/Images/Serverless-Middleware.jpg)
+# Node.JS Azure Function
+Node.JS code for the function app deployed in the ANS Azure Bootcamp Day.
+
+![Diagram](Images/Serverless-Middleware.jpg)

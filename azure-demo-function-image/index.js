@@ -33,15 +33,16 @@ module.exports = function (context, myBlob) {
     var PartitionKey = "";
 
     var keyVar = 'AZURE_COMPUTER_VISION_KEY';
+    var region = 'AZURE_COMPUTER_VISION_REGION';
 
-    if (!process.env[keyVar]) {
+    if (!process.env[keyVar] || !process.env[region]) {
     throw new Error('please set/export the following environment variable: ' + keyVar);
     }
 
     let serviceKey = process.env[keyVar];
 
     let credentials = new CognitiveServicesCredentials(serviceKey);
-    let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, "westeurope");
+    let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, region);
     let cvModels = computerVisionApiClient.models;
 
     context.log("Image name: " + context.bindingData.name);
@@ -101,7 +102,7 @@ module.exports = function (context, myBlob) {
     //create thumbnails
     function thumbnail(imageUri, callback) {
         var options = { method: 'POST',
-        url: 'https://westeurope.api.cognitive.microsoft.com/vision/v1.0/generateThumbnail',
+        url: 'https://'+region+'.api.cognitive.microsoft.com/vision/v1.0/generateThumbnail',
         qs: { width: '95', height: '95', smartCropping: 'true' },
         headers: 
         { 

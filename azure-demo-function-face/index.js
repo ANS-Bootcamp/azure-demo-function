@@ -33,14 +33,15 @@ module.exports = function (context, myBlob) {
 
     var keyVar = 'AZURE_COMPUTER_VISION_KEY';
     var keyVarFace = 'AZURE_COMPUTER_VISION_FACE_KEY';
-    var region = 'AZURE_COMPUTER_VISION_REGION';
+    var keyRegion = 'AZURE_COMPUTER_VISION_REGION';
     
-    if (!process.env[keyVar] || !process.env[keyVarFace] || !process.env[region]) {
-    throw new Error('please set/export the following environment variables: ' + keyVar + ' ' + keyVarFace);
+    if (!process.env[keyVar] || !process.env[keyVarFace] || !process.env[keyRegion]) {
+    throw new Error('please set/export the following environment variables: ' + keyVar + ' ' + keyVarFace + ' ' + keyRegion);
     }
 
     let serviceKey = process.env[keyVar];
     let serviceKeyFace = process.env[keyVarFace];
+    let region = process.env[keyRegion];
 
     let credentials = new CognitiveServicesCredentials(serviceKeyFace);
     let client = new FaceAPIClient(credentials, region);

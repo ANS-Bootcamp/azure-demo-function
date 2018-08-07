@@ -33,7 +33,8 @@ module.exports = function (context, myBlob) {
 
     var keyVar = 'AZURE_COMPUTER_VISION_KEY';
     var keyVarFace = 'AZURE_COMPUTER_VISION_FACE_KEY';
-
+    var region = 'AZURE_COMPUTER_VISION_REGION';
+    
     if (!process.env[keyVar] || !process.env[keyVarFace]) {
     throw new Error('please set/export the following environment variables: ' + keyVar + ' ' + keyVarFace);
     }
@@ -42,7 +43,7 @@ module.exports = function (context, myBlob) {
     let serviceKeyFace = process.env[keyVarFace];
 
     let credentials = new CognitiveServicesCredentials(serviceKeyFace);
-    let client = new FaceAPIClient(credentials, "westeurope");
+    let client = new FaceAPIClient(credentials, region);
 
     context.log("Image name: " + context.bindingData.name);
 
@@ -92,7 +93,7 @@ module.exports = function (context, myBlob) {
     //create thumbnails
     function thumbnail(imageUri, callback) {
         var options = { method: 'POST',
-        url: 'https://westeurope.api.cognitive.microsoft.com/vision/v1.0/generateThumbnail',
+        url: 'https://'+region+'.api.cognitive.microsoft.com/vision/v1.0/generateThumbnail',
         qs: { width: '95', height: '95', smartCropping: 'true' },
         headers: 
         { 

@@ -34,8 +34,9 @@ module.exports = function (context, myBlob) {
 
     var keyVar = 'AZURE_COMPUTER_VISION_KEY';
     var keyRegion = 'AZURE_COMPUTER_VISION_REGION';
+    
 
-    if (!process.env[keyVar] || !process.enc[keyRegion]) {
+    if (!process.env[keyVar] || !process.env[keyRegion]) {
     throw new Error('please set/export the following environment variable: ' + keyVar + ' ' + keyRegion);
     }
 

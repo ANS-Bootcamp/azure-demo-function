@@ -168,7 +168,7 @@ module.exports = function (context, myBlob) {
     //create thumbnails
     function thumbnail(imageUri, callback) {
         var options = { method: 'POST',
-        url: 'https://'+region'+.api.cognitive.microsoft.com/vision/v1.0/generateThumbnail',
+        url: 'https://'+region+'.api.cognitive.microsoft.com/vision/v1.0/generateThumbnail',
         qs: { width: '95', height: '95', smartCropping: 'true' },
         headers: 
         { 

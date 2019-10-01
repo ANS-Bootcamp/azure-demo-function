@@ -1,4 +1,4 @@
-module.exports = function (context, myBlob) {
+module.exports = async function (context, myBlob) {
 
     var FaceAPIClient = require('azure-cognitiveservices-face');
     var CognitiveServicesCredentials = require('ms-rest-azure').CognitiveServicesCredentials;
@@ -31,16 +31,16 @@ module.exports = function (context, myBlob) {
     var thumbUri = "https://" + thumbsPath;
     context.log(thumbUri);
 
-    var keyVar = 'AZURE_COMPUTER_VISION_KEY';
-    var keyVarFace = 'AZURE_COMPUTER_VISION_FACE_KEY';
-    var keyRegion = 'AZURE_COMPUTER_VISION_REGION';
+
+    var keyCognitive = 'AZURE_COGNITIVE_SERVICES_KEY';
+    var keyRegion = 'AZURE_COGNITIVE_SERVICES_REGION';
     
-    if (!process.env[keyVar] || !process.env[keyVarFace] || !process.env[keyRegion]) {
-    throw new Error('please set/export the following environment variables: ' + keyVar + ' ' + keyVarFace + ' ' + keyRegion);
+    if (!process.env[keyCognitive] || !process.env[keyRegion]) {
+    throw new Error('please set/export the following environment variables: ' + keyCognitive + ' ' + keyRegion);
     }
 
-    let serviceKey = process.env[keyVar];
-    let serviceKeyFace = process.env[keyVarFace];
+    let serviceKey = process.env[keyCognitive];
+    let serviceKeyFace = process.env[keyCognitive];
     let region = process.env[keyRegion];
 
     let credentials = new CognitiveServicesCredentials(serviceKeyFace);

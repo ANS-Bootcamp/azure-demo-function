@@ -1,6 +1,6 @@
 module.exports = async function (context, myBlob) {
 
-    var FaceAPIClient = require('azure-cognitiveservices-face');
+    var Vision = require('azure-cognitiveservices-vision');
     var CognitiveServicesCredentials = require('ms-rest-azure').CognitiveServicesCredentials;
     var azure = require('azure-storage');
     var request = require("request");
@@ -44,7 +44,8 @@ module.exports = async function (context, myBlob) {
     let region = process.env[keyRegion];
 
     let credentials = new CognitiveServicesCredentials(serviceKeyFace);
-    let client = new FaceAPIClient(credentials, region);
+    let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, region);
+    let cvModels = computerVisionApiClient.models;
 
     context.log("Image name: " + context.bindingData.name);
 
@@ -52,7 +53,7 @@ module.exports = async function (context, myBlob) {
     
     //image query
     async function imageQuery(){
-        client.face.detectInStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
+        computerVisionApiClient.face.detectInStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
           
             .then(function(data){    
                 // write to azure table

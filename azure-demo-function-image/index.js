@@ -44,7 +44,6 @@ module.exports = function (context, myBlob) {
 
     let credentials = new CognitiveServicesCredentials(serviceKey);
     let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, region);
-    let cvModels = computerVisionApiClient.models;
 
     context.log("Image name: " + context.bindingData.name);
 

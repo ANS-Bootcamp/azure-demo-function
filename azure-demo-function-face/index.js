@@ -44,8 +44,8 @@ module.exports = async function (context, myBlob) {
 
     let credentials = new CognitiveServicesCredentials(serviceKey);
     //let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, region);
-    let faceApiClient = new Vision.FaceAPIClient(credentials, region);
-    let cvModels = computerVisionApiClient.models;
+    let faceApiClient = new Vision.FaceAPIClient(credentials, 'https://'+ region + '.api.cognitive.microsoft.com');
+
 
     context.log("Image name: " + context.bindingData.name);
 
@@ -53,8 +53,7 @@ module.exports = async function (context, myBlob) {
     
     //image query
     function imageQuery(){
-        faceApiClient.detectInStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
-          
+        faceApiClient.face.detectWithStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
         
             .then(function(data){    
                 // write to azure table

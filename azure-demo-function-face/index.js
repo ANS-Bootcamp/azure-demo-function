@@ -51,7 +51,7 @@ module.exports = async function (context, myBlob) {
     await imageQuery();
     
     //image query
-    await function imageQuery(){
+    async function imageQuery(){
         client.face.detectInStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
           
             .then(function(data){    

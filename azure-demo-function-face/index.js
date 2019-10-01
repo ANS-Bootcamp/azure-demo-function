@@ -48,13 +48,11 @@ module.exports = async function (context, myBlob) {
     let credentials = new CognitiveServicesCredentials(serviceKey);
     let faceApiClient = new Vision.FaceAPIClient(credentials, endpoint);
 
-
     context.log("Image name: " + context.bindingData.name);
-
-    imageQuery();
     
     //image query
     function imageQuery(){
+        context.log("Calling Face API")
         faceApiClient.face.detectWithStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
         
             .then(function(data){    
@@ -96,6 +94,8 @@ module.exports = async function (context, myBlob) {
     
     //create thumbnails
     function thumbnail(imageUri, callback) {
+        context.log("Calling Thumbnail API")
+
         var options = { method: 'POST',
         url: 'https://'+region+'.api.cognitive.microsoft.com/vision/v1.0/generateThumbnail',
         qs: { width: '95', height: '95', smartCropping: 'true' },
@@ -125,4 +125,7 @@ module.exports = async function (context, myBlob) {
             }; 
         });
     };
+
+    imageQuery();
+
 };

@@ -8,6 +8,7 @@
   "dependencies": {
     "async": "^2.6.0",
     "azure-cognitiveservices-face": "^1.0.0-preview",
+    "azure-cognitiveservices-vision": "^2.0.0",
     "azure-storage": "^2.10.3",
     "moment": "^2.21.0",
     "ms-rest-azure": "^2.5.2",

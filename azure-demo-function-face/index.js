@@ -55,6 +55,7 @@ module.exports = async function (context, myBlob) {
     async function imageQuery(){
         computerVisionApiClient.face.detectInStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
           
+        
             .then(function(data){    
                 // write to azure table
                 context.log("data: " + JSON.stringify(data));

@@ -40,20 +40,20 @@ module.exports = async function (context, myBlob) {
     }
 
     let serviceKey = process.env[keyCognitive];
-    let serviceKeyFace = process.env[keyCognitive];
     let region = process.env[keyRegion];
 
-    let credentials = new CognitiveServicesCredentials(serviceKeyFace);
-    let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, region);
+    let credentials = new CognitiveServicesCredentials(serviceKey);
+    //let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, region);
+    let faceApiClient = new Vision.FaceAPIClient(credentials, region);
     let cvModels = computerVisionApiClient.models;
 
     context.log("Image name: " + context.bindingData.name);
 
-    await imageQuery();
+    imageQuery();
     
     //image query
-    async function imageQuery(){
-        computerVisionApiClient.face.detectInStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
+    function imageQuery(){
+        faceApiClient.detectInStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
           
         
             .then(function(data){    

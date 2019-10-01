@@ -51,7 +51,7 @@ module.exports = async function (context, myBlob) {
     await imageQuery();
     
     //image query
-    async function imageQuery(){
+    await function imageQuery(){
         client.face.detectInStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
           
             .then(function(data){    
@@ -69,7 +69,7 @@ module.exports = async function (context, myBlob) {
                     }
                 })
 
-                await thumbnail(imageUri, function (error, outputBlob) {
+                thumbnail(imageUri, function (error, outputBlob) {
 
                     if (error) {
                         context.log("No Output Blob");
@@ -92,7 +92,7 @@ module.exports = async function (context, myBlob) {
     };  
     
     //create thumbnails
-    async function thumbnail(imageUri, callback) {
+    function thumbnail(imageUri, callback) {
         var options = { method: 'POST',
         url: 'https://'+region+'.api.cognitive.microsoft.com/vision/v1.0/generateThumbnail',
         qs: { width: '95', height: '95', smartCropping: 'true' },

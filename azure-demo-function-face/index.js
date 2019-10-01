@@ -40,11 +40,13 @@ module.exports = async function (context, myBlob) {
     }
 
     let serviceKey = process.env[keyCognitive];
-    let region = process.env[keyRegion];
+    let region =process.env[keyRegion];
+    let endpoint =  'https://'+region +'.api.cognitive.microsoft.com';
+    
+    context.log(endpoint)
 
     let credentials = new CognitiveServicesCredentials(serviceKey);
-    //let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, region);
-    let faceApiClient = new Vision.FaceAPIClient(credentials, 'https://'+ region + '.api.cognitive.microsoft.com');
+    let faceApiClient = new Vision.FaceAPIClient(credentials, endpoint);
 
 
     context.log("Image name: " + context.bindingData.name);

@@ -39,17 +39,10 @@ module.exports = async function (context, myBlob) {
     throw new Error('please set/export the following environment variables: ' + keyCognitive + ' ' + keyRegion);
     }
 
-    //let serviceKey = process.env[keyCognitive];
-    //let region =process.env[keyRegion];
-    context.log(process.env[keyCognitive]);
-    context.log(process.env[keyRegion]);
-
-    let serviceKey = "37326ff1ada949d4b3d7eb3a8154cdf4";
-    let region = "westeurope";
+    let serviceKey = process.env[keyCognitive];
+    let region =process.env[keyRegion];
 
     let endpoint =  'https://'+region +'.api.cognitive.microsoft.com';
-    
-    context.log(endpoint);
 
     let credentials = new CognitiveServicesCredentials(serviceKey);
     let faceApiClient = new Vision.FaceAPIClient(credentials, endpoint);

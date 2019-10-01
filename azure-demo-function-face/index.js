@@ -43,7 +43,7 @@ module.exports = async function (context, myBlob) {
     let region =process.env[keyRegion];
     let endpoint =  'https://'+region +'.api.cognitive.microsoft.com';
     
-    context.log(endpoint)
+    context.log(endpoint);
 
     let credentials = new CognitiveServicesCredentials(serviceKey);
     let faceApiClient = new Vision.FaceAPIClient(credentials, endpoint);

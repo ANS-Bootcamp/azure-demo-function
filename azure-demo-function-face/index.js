@@ -1,6 +1,6 @@
-module.exports = function (context, myBlob) {
+module.exports = async function (context, myBlob) {
 
-    var FaceAPIClient = require('azure-cognitiveservices-face');
+    var Vision = require('azure-cognitiveservices-vision');
     var CognitiveServicesCredentials = require('ms-rest-azure').CognitiveServicesCredentials;
     var azure = require('azure-storage');
     var request = require("request");
@@ -31,29 +31,30 @@ module.exports = function (context, myBlob) {
     var thumbUri = "https://" + thumbsPath;
     context.log(thumbUri);
 
-    var keyVar = 'AZURE_COMPUTER_VISION_KEY';
-    var keyVarFace = 'AZURE_COMPUTER_VISION_FACE_KEY';
-    var keyRegion = 'AZURE_COMPUTER_VISION_REGION';
+
+    var keyCognitive = 'AZURE_COGNITIVE_SERVICES_KEY';
+    var keyRegion = 'AZURE_COGNITIVE_SERVICES_REGION';
     
-    if (!process.env[keyVar] || !process.env[keyVarFace] || !process.env[keyRegion]) {
-    throw new Error('please set/export the following environment variables: ' + keyVar + ' ' + keyVarFace + ' ' + keyRegion);
+    if (!process.env[keyCognitive] || !process.env[keyRegion]) {
+    throw new Error('please set/export the following environment variables: ' + keyCognitive + ' ' + keyRegion);
     }
 
-    let serviceKey = process.env[keyVar];
-    let serviceKeyFace = process.env[keyVarFace];
-    let region = process.env[keyRegion];
+    let serviceKey = process.env[keyCognitive];
+    let region =process.env[keyRegion];
 
-    let credentials = new CognitiveServicesCredentials(serviceKeyFace);
-    let client = new FaceAPIClient(credentials, region);
+    let endpoint =  'https://'+region +'.api.cognitive.microsoft.com';
+
+    let credentials = new CognitiveServicesCredentials(serviceKey);
+    let faceApiClient = new Vision.FaceAPIClient(credentials, endpoint);
 
     context.log("Image name: " + context.bindingData.name);
-
-    imageQuery();
     
     //image query
     function imageQuery(){
-        client.face.detectInStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
-          
+        context.log("Calling Face API")
+
+        faceApiClient.face.detectWithStream(myBlob, {returnFaceAttributes: ['age','gender','smile','facialHair','glasses','emotion','hair','makeup']})
+        
             .then(function(data){    
                 // write to azure table
                 context.log("data: " + JSON.stringify(data));
@@ -93,6 +94,8 @@ module.exports = function (context, myBlob) {
     
     //create thumbnails
     function thumbnail(imageUri, callback) {
+        context.log("Calling Thumbnail API")
+
         var options = { method: 'POST',
         url: 'https://'+region+'.api.cognitive.microsoft.com/vision/v1.0/generateThumbnail',
         qs: { width: '95', height: '95', smartCropping: 'true' },
@@ -122,4 +125,7 @@ module.exports = function (context, myBlob) {
             }; 
         });
     };
+
+    imageQuery();
+
 };

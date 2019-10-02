@@ -7,12 +7,12 @@
   "license": "MIT",
   "dependencies": {
     "async": "^2.6.0",
-    "azure-cognitiveservices-face": "^1.0.0-preview",
-    "azure-storage": "^2.8.0",
+    "azure-cognitiveservices-vision": "^2.0.0",
+    "azure-storage": "^2.10.3",
     "moment": "^2.21.0",
-    "ms-rest-azure": "^2.5.2",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "ms-rest-azure": "^3.0.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
   },
   "devDependencies": {},
   "scripts": {

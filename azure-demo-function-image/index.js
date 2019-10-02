@@ -32,19 +32,18 @@ module.exports = function (context, myBlob) {
 
     var PartitionKey = "";
 
-    var keyVar = 'AZURE_COMPUTER_VISION_KEY';
-    var keyRegion = 'AZURE_COMPUTER_VISION_REGION';
-
-    if (!process.env[keyVar] || !process.env[keyRegion]) {
-    throw new Error('please set/export the following environment variable: ' + keyVar + ' ' + keyRegion);
+    var keyCognitive = 'AZURE_COGNITIVE_SERVICES_KEY';
+    var keyRegion = 'AZURE_COGNITIVE_SERVICES_REGION';
+    
+    if (!process.env[keyCognitive] || !process.env[keyRegion]) {
+    throw new Error('please set/export the following environment variables: ' + keyCognitive + ' ' + keyRegion);
     }
 
-    let serviceKey = process.env[keyVar];
+    let serviceKey = process.env[keyCognitive];
     let region = process.env[keyRegion];
 
     let credentials = new CognitiveServicesCredentials(serviceKey);
     let computerVisionApiClient = new Vision.ComputerVisionAPIClient(credentials, region);
-    let cvModels = computerVisionApiClient.models;
 
     context.log("Image name: " + context.bindingData.name);
 

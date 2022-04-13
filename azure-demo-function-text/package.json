@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "async": "^2.6.0",
+    "async": "^3.2.2",
     "azure-cognitiveservices-vision": "^1.0.0-preview",
     "azure-storage": "^2.8.0",
     "moment": "^2.21.0",

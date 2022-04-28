@@ -6,7 +6,7 @@
   "author": "Nathan Gaskill",
   "license": "MIT",
   "dependencies": {
-    "async": "^2.6.0",
+    "async": "^2.6.4",
     "azure-cognitiveservices-face": "^1.0.0-preview",
     "azure-storage": "^2.8.0",
     "moment": "^2.21.0",
